@@ -1,0 +1,8 @@
+**/bin/
+**/obj/
+FileOutput/
+**/FileOutput/*.csv
+Files/
+**/Files/*.csv
+.DS_Store
+.vs/
