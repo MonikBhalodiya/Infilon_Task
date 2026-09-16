@@ -12,7 +12,7 @@ A .NET 5 console application that retrieves planet and moon information from the
 - Writes three CSV reports using temporary files and atomic replacement.
 - Supports cancellation with Ctrl+C.
 - Logs loading, calculation, console output, file output, completion, and failure states.
-- Keeps the API key outside source code.
+- Centralizes API authentication settings in SolarSystemApiOptions.
 
 ## Requirements
 
@@ -121,7 +121,7 @@ The current API may return zero for moon temperatures. The application preserves
 
 ## Configuration
 
-The application does not use an appsettings.json file or environment variables. When the application starts, it securely prompts for the API key without displaying the entered characters. The API base URL and 30-second timeout are defined by SolarSystemApiOptions.
+The application does not use an appsettings.json file, environment variables, or runtime input for API configuration. The API key, base URL, and 30-second timeout are defined directly in SolarSystemApiOptions.
 
 The CSV path is configured in Configuration/OutputOptions.cs:
 
@@ -165,7 +165,7 @@ Run from the repository root:
 
     dotnet run --project .\Test-Taste-Console-Application\Test-Taste-Console-Application.csproj --configuration Release
 
-Enter the API key when prompted. Press Ctrl+C to cancel a running operation.
+Press Ctrl+C to cancel a running operation.
 
 ## Error handling
 
@@ -180,8 +180,8 @@ Enter the API key when prompted. Press Ctrl+C to cancel a running operation.
 
 1. The user starts the console application with the dotnet run command.
 2. Program.Main configures log4net and registers Ctrl+C cancellation handling.
-3. SolarSystemApiOptions securely prompts the user for the API key and validates it.
-4. SolarSystemApiOptions creates the fixed API base URL and 30-second timeout settings.
+3. SolarSystemApiOptions loads the API key, base URL, and timeout defined in the class.
+4. Program uses those values to configure the authenticated HTTP client.
 5. OutputOptions resolves the ./Files/ path against the current working directory.
 6. Program configures dependency injection and creates the typed HttpClient.
 7. The HttpClient receives the API base address, timeout, JSON Accept header, and Bearer authorization header.
